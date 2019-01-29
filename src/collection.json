@@ -17,7 +17,7 @@
   "schematics": {
     "my-schematic": {
       "description": "An example schematic",
-      "factory": "./my-schematic/index#mySchematic"
+      "factory": "./my-schematic/index"
     },
     "my-full-schematic": {
       "description": "A schematic using a source and a schema to validate options.",
