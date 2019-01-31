@@ -15,8 +15,10 @@
   "dependencies": {
     "@angular-devkit/core": "^0.8.1",
     "@angular-devkit/schematics": "^0.8.1",
+    "@types/diff": "^4.0.0",
     "@types/jasmine": "^2.6.0",
     "@types/node": "^8.0.31",
+    "diff": "^4.0.1",
     "jasmine": "^2.8.0",
     "prettier": "^1.16.1",
     "typescript": "^2.5.2"
