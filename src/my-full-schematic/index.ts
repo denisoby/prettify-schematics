@@ -6,13 +6,16 @@ import {
 } from "@angular-devkit/schematics";
 
 import * as fs from "fs";
-import {Hunk, structuredPatch} from "diff";
+// import * as path from "path";
+import * as cosmiconfig from "cosmiconfig";
+
+import { Hunk, structuredPatch } from "diff";
 
 interface ChangedFileAndLines {
   path: string;
   lines?: {
-    start: number; // 0 based
-    finish: number;
+    rangeStart: number; // 0 based
+    rangeEnd: number;
   };
 }
 
@@ -30,7 +33,7 @@ export default function(options: any): Rule {
       }
 
       const path = action.path;
-      const fileChanged = {
+      const fileChanged: ChangedFileAndLines = {
         path
       };
 
@@ -44,20 +47,21 @@ export default function(options: any): Rule {
       // let's create diff and compare to find changes
 
       const newContent = (action as any).content.toString();
-      const fullPath = process.cwd() + path;
+      const projectRoot = process.cwd();
+      const fullPath = projectRoot + path;
 
       console.log("fullPath: ", fullPath);
-      const oldContent = fs.readFileSync(fullPath, {encoding: 'utf-8'});
+      const oldContent = fs.readFileSync(fullPath, { encoding: "utf-8" });
 
       console.log("oldContent: ", oldContent);
 
       const diff = structuredPatch(
-        "oldFileName",
-        "newFileName",
-          newContent,
-          oldContent,
-        "oldHeader",
-        "newHeader",
+        "oldFileNameUseless",
+        "newFileNameUseless",
+        newContent,
+        oldContent,
+        "oldHeaderUseless",
+        "newHeaderUseless",
         {
           newlineIsToken: true
         }
@@ -70,9 +74,24 @@ export default function(options: any): Rule {
       diff.hunks.forEach((part: Hunk) => {
         // green for additions, red for deletions
         // grey for common parts
-        console.log('---------- next hunk');
+        console.log("---------- next hunk");
         console.log(JSON.stringify(part, null, 4));
+
+        changedFiles.push({
+          ...fileChanged,
+          lines: {
+            rangeStart: part.newStart,
+            rangeEnd: part.newStart + part.newLines - 1
+          }
+        });
       });
+
+      // todo handle empty config ?
+      // todo load config directly by addr from params
+      const explorer = cosmiconfig("prettier");
+      const prettierConfig = explorer.searchSync(projectRoot);
+
+      // const formattedSource = prettier.format(newContent, {...prettierConfig, rangeStart: )
     });
 
     let actionsForLogging = actions.map((action: Action) => ({
