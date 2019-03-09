@@ -1,3 +1,14 @@
+git clean -fd && git reset --hard && ng g prettify-schematic:my-schematic
+
+git clean -fd && git reset --hard && node ./node_modules/@angular/cli/bin/ng g prettify-schematic:my-schematic 
+
+
+
+
+
+
+
+
 # Getting Started With Schematics
 
 This repository is a basic Schematic implementation that serves as a starting point to create and publish Schematics to NPM.
@@ -25,4 +36,3 @@ npm publish
 ```
 
 That's it!
- 
